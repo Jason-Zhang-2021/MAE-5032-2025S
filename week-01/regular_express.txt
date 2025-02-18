@@ -1,0 +1,11 @@
+"Open Source" is a good mechanism to develop programs
+apple is my favorite food
+Football game does not use feet only
+Oh! The soup taste good ^M
+The symbol '*' is represented as start
+<Happy>
+Goooogle is good!
+Go Go Go
+However, this dress is about $ 333 dollars ^L.
+\\ This is commen.t
+# End of file
