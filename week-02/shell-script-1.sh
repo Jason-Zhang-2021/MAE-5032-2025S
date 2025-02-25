@@ -21,7 +21,7 @@ BACKUP_COUNT=$(ls -1 "$BACKUP_DIR"/backup_*.tar.gz | wc -l)
 
 if (( BACKUP_COUNT > MAX_BACKUPS )); then
     echo "Removing old backups..."
-    ls -1t "$BACKUP_DIR"/backup_*.tar.gz | tail -n +$((MAX_BACKUPS+1)) | xargs rm -f
+    rm -f $(ls -1t "$BACKUP_DIR"/backup_*.tar.gz | tail -n +$((MAX_BACKUPS+1)))
     echo "Old backups cleaned up."
 fi
 
