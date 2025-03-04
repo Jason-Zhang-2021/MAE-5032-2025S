@@ -3,7 +3,7 @@
 #include <chrono>
 
 #define N 2048 // Matrix size
-#define Bsize 4 // Block size
+#define Bsize 8 // Block size
 
 void matrix_mult_naive(std::vector<std::vector<double>> &A,
                        std::vector<std::vector<double>> &B,
