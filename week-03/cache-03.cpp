@@ -3,6 +3,7 @@
 #include <chrono>
 
 #define N 1024 // Matrix size
+#define Bsize 4 // Block size
 
 void matrix_mult_naive(std::vector<std::vector<double>> &A,
                        std::vector<std::vector<double>> &B,
@@ -40,7 +41,7 @@ int main() {
     C.assign(N, std::vector<double>(N, 0.0)); // Reset C
 
     start = std::chrono::high_resolution_clock::now();
-    matrix_mult_blocked(A, B, C, 32);
+    matrix_mult_blocked(A, B, C, Bsize);
     end = std::chrono::high_resolution_clock::now();
     std::cout << "Blocked Matrix Multiplication Time: "
               << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
