@@ -11,7 +11,7 @@ int main() {
 
   std::cout << "Testing cache effects with fixed number of accesses:\n";
 
-  for (size_t stride = 1; stride <= 1024; stride *= 2) 
+  for (size_t stride = 1; stride <= 16384; stride *= 2) 
   {
     auto start = std::chrono::high_resolution_clock::now();
 
