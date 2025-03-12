@@ -13,3 +13,23 @@ This course aims to give students an in-depth understanding of the modern approa
 
 ### Prerequisites
 C programming language.
+
+## Course Schedule:
+| Week  | Topic |
+|-------|--------------------------------------------------|
+| 1     | Introduction to HPC |
+| 2     | Linux/Unix basics: file system, permissions, regular expressions |
+| 3     | Linux/Unix intermediate: vi editor, bash script programming |
+| 4     | Serial computer architecture: memory hierarchy |
+| 5     | Compiler: GCC and optimization flags |
+| 6     | Makefile and CMake tutorial |
+| 7     | Version control, Git, and GitHub |
+| 8     | Code debugging and profiling |
+| 9     | Numerical analysis basics: linear algebra and PDEs |
+| 10    | Parallel computer architecture |
+| 11    | MPI programming: basic MPI calls |
+| 12    | MPI programming: MPI collective communications |
+| 13    | MPI programming: performance analysis |
+| 14    | MPI programming: implementation of matrix-vector multiplication |
+| 15    | PETSc library |
+| 16    | VTK for visualization and HDF5 for I/O |
