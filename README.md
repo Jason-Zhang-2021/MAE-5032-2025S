@@ -11,6 +11,11 @@
 ### Goals
 This course aims to give students an in-depth understanding of the modern approach in technical and parallel computing. The students will be guided to operate computers in the Unix/Linux system and learn basic technical computing skills and gain an understanding of compilers, aotumake system, version control, code profiling and debugging, etc. The architecture of computers will be discussed, with focus on memory hierarchy, parallel design, etc. We will discuss numerical analysis to provide a background of the application. The parallel programming based on the message passing interface (MPI) will be discussed. We will also introduce modern scientific computing libraries, including PETSc, VTK, and HDF5.
 
+## References:
+- *Parallel programming in C with MPI and OpenMP*, Michale J. Quinn, 2003  
+- *Computer systems: a programmer’s perspective*, Randal Bryant and David O’Hallaron, 2002  
+- **Tutorials will be distributed in class**  
+
 ### Prerequisites
 C programming language.
 
