@@ -8,12 +8,9 @@ int main()
   // print message
   printf("Hello world!\n");
 
-  double area = PI * SQUARE(5);
-
-  printf("Area is %e", area);
-
 #ifdef DEBUG
-  printf("Debug mode enabled!\n");
+  double area = PI * SQUARE(5);
+  printf("Area is %e \n", area);
 #endif
 
   return 0;

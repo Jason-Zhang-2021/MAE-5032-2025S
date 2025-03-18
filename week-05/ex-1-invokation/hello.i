@@ -561,12 +561,9 @@ int main()
 
   printf("Hello world!\n");
 
-  double area = 3.14159 * ((5) * (5));
-
-  printf("Area is %e", area);
 
 
-  printf("Debug mode enabled!\n");
+
 
 
   return 0;
