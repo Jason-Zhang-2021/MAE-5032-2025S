@@ -7,8 +7,8 @@
 using namespace std;
 using namespace std::chrono;
 
-const int N = 128; 
-const int REPEATS = 10000000;
+const int N = 32768; 
+const int REPEATS = 100000;
 
 // Allocate aligned memory (32-byte aligned for AVX)
 float* aligned_alloc(int size) {
