@@ -1,0 +1,18 @@
+#!/bin/bash
+
+#BSUB -J mytest
+#BSUB -q debug
+#BSUB -n 1
+#BSUB -W 00:05
+#BSUB -e log
+#BSUB -o log
+#BSUB -R "span[ptile=1]"
+
+echo $LSB_JOBID
+echo $LSB_JOBNAME
+echo $LSB_QUEUE
+echo $LS_SUBCWD
+echo $LSB_HOSTS
+echo $LSB_MCPU_HOSTS
+echo $LSB_DJOB_HOSTFILE
+echo $LSB_DJOB_NUMPROC
