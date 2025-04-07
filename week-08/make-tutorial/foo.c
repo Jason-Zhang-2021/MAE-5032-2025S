@@ -5,5 +5,5 @@ int d=4;
 int main()
 {
   int a=2;
-  return (bar(a*c*D));
+  return (bar(a*c*d));
 }
