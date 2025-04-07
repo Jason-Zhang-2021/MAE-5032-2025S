@@ -1,0 +1,33 @@
+# Files
+EXEC := foo
+SRC  := $(wildcard *c)
+OBJ  := $(patsubst %.c,%.o,$(SRC))
+
+# OPTIONS
+CC      := gcc
+CFLAGS  := -O3
+LDFLAGS := -L/user/lib
+LDLIBS  := -lm
+
+$(EXEC): $(OBJ)
+	$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS)
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $<
+
+foo.o bar.0: bar.h
+
+# Useful phony targets
+.PHONY: clobber clean neat echo
+clobber: clean
+	$(RM) $(EXEC)
+
+clean: neat
+	$(RM) $(OBJ)
+
+neat:
+	$(RM) *~ .*~
+
+echo:
+	@echo "Sources: $(SRC)"
+	@echo "Objects: $(OBJ)"
