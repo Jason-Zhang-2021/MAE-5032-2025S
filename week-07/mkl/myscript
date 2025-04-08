@@ -8,10 +8,6 @@
 #BSUB -R "span[ptile=1]"
 #BSUB -m 'r13n45'
 
-module purge
-module load intel/2018.4
-module load mpi/intel/2018.4
-
-mpirun /work/mae-liuj/mae-5032-2025s/06-lsf/a.out > $LSB_JOBID.log 2>&1
+./a.out > $LSB_JOBID.log 2>&1
 
 

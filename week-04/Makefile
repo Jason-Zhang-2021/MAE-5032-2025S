@@ -3,8 +3,8 @@ CXX = g++
 CXXFLAGS = -O3 -std=c++11 -march=native
 
 # OpenBLAS Paths
-OPENBLAS_INC = -I/Users/juliu/lib/openblas/include/openblas
-OPENBLAS_LIB = -L/Users/juliu/lib/openblas/lib -lopenblas
+OPENBLAS_INC = -I/usr/local/opt/openblas/include
+OPENBLAS_LIB = -L/usr/local/opt/openblas/lib -lopenblas
 
 # Target executable
 TARGET = blas_demo
