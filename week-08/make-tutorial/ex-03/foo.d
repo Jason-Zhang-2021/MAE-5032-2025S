@@ -1,3 +1,3 @@
-foo.o: foo.c bar.h help.h
+foo.o: foo.c bar.h hello.h
 bar.h:
-help.h:
+hello.h:
