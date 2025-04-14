@@ -1,16 +1,14 @@
 # Files
 EXEC := foo
-SRC  := $(wildcard *c)
-OBJ  := $(patsubst %.c,%.o,$(SRC))
+SRC  := bar.c foo.c
+OBJ  := bar.o foo.o
 
 # OPTIONS
 CC      := gcc
 CFLAGS  := -O3
-LDFLAGS := -L/user/lib
-LDLIBS  := -lm
 
 $(EXEC): $(OBJ)
-	$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS)
+	$(CC) -o $@ $^
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $<
