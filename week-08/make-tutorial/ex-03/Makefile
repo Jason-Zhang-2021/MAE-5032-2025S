@@ -1,19 +1,21 @@
 # Files
 EXEC := foo
-SRC  := bar.c foo.c
-OBJ  := bar.o foo.o
+SRC  := $(wildcard *.c) 
+OBJ  := $(patsubst %.c,%.o,$(SRC))
 
 # OPTIONS
 CC      := gcc
-CFLAGS  := -O3
+CFLAGS  := -O3 -MMD -MP
+LDFLAGS := -L/usr/lib
+LDLIBS  := -lm
 
 $(EXEC): $(OBJ)
-	$(CC) -o $@ $^
+	$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $<
 
-foo.o bar.o: bar.h
+-include $(patsubst %.o, %.d, $(OBJ))
 
 # Useful phony targets
 .PHONY: clobber clean neat echo
