@@ -8,3 +8,6 @@ foo.o: foo.c bar.h
 
 bar.o: bar.c bar.h
 	$(CC) -c bar.c
+
+clean:
+	rm -rf *.o foo
