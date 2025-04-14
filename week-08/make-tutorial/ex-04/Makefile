@@ -1,38 +1,31 @@
-# Files
 EXEC := foo
-SRC  := $(wildcard *.c) 
-OBJ  := $(patsubst %.c,%.o,$(SRC))
+LIB  := libbar.a
+DIR  := ./lib
+SRC  := $(wildcard ./src/*.c)
+OBJ  := $(patsubst ./src/%.c, %.o, $(SRC))
 
-# OPTIONS
-CC      := gcc
+CFLAGS := -I./include
+LDFLAGS := -L./lib
+LDLIBS  := -lbar
 
-ifneq ($(DEBUG_MODE) , yes)
-	CFLAGS  := -O3 -MMD -MP
-else
-	CFLAGS := -g
-endif
-LDFLAGS := -L/usr/lib
-LDLIBS  := -lm
+CC := gcc
+AR := ar rs
+RM := rm -rf
 
-$(EXEC): $(OBJ)
-	$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS)
-
-%.o: %.c
+%.o : ./src/%.c ./include/%.h
 	$(CC) $(CFLAGS) -c $<
 
--include $(patsubst %.o, %.d, $(OBJ))
+$(EXEC) : foo.c $(LIB)
+	$(CC) $(CFLAGS) $(LDFLAGS) $(LDLIBS) -o $@ $^
 
-# Useful phony targets
-.PHONY: clobber clean neat echo
-clobber: clean
-	$(RM) $(EXEC)
+$(LIB) : $(OBJ)
+	$(AR) $@ $^
 
-clean: neat
-	$(RM) $(OBJ)
+.PHONY: clean install
+clean:
+	$(RM) $(EXEC) $(OBJ) $(LIB) $(DIR)
 
-neat:
-	$(RM) *~ .*~ *.d
+install:
+	mkdir -p $(DIR)
+	mv $(LIB) $(DIR)
 
-echo:
-	@echo "Sources: $(SRC)"
-	@echo "Objects: $(OBJ)"
