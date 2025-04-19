@@ -1,0 +1,2 @@
+int help(int);
+
