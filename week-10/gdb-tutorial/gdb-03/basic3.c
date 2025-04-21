@@ -16,4 +16,4 @@ int main()
     std::cout<<"That is not a positive integer!\n";
 }
 
-
+// EOF
