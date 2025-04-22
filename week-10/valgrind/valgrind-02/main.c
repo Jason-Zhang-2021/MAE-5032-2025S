@@ -1,23 +1,51 @@
-#include<stdlib.h>
-#include<stdio.h>
-#include<time.h>
+#include <iostream>
+#include <cstring>
 
-const int ARR_SIZE = 1000;
+class Data 
+{
+  public:
+    char* buffer;
 
-int main() {
-  int *intArray = malloc(sizeof(int) * ARR_SIZE);
+    Data(size_t size) {
+      buffer = new char[size];
+      std::strcpy(buffer, "Valgrind tutorial");
+    }
 
-  for (int i=0; i <= ARR_SIZE; i++) {
-    intArray[i] = i;
-  }
+    ~Data() {
+      // Intentionally missing delete[] buffer;
+    }
 
-  srand(time(NULL));
-  int randNum = rand() % ARR_SIZE;
+    void corrupt() {
+      delete[] buffer;     // Free here
+      buffer[0] = 'X';     // Use-after-free
+    }
+};
 
-  printf("intArray[%d]: %d\n", randNum, intArray[randNum]);
-
-  return 0;
+void leak_indirect() 
+{
+  int ** indirect = new int*[2];
+  indirect[0] = new int[10];  // Never deleted
+  indirect[1] = new int[10];  // Never deleted
+                              // No delete for indirect or indirect[i]
 }
 
+void still_reachable() 
+{
+  static int* reachable = new int[5];  // Only once, stays until program ends
+  reachable[0] = 42;
+}
 
+int main() 
+{
+  Data* d1 = new Data(100);
+  
+  d1->corrupt();          // Triggers use-after-free
 
+  leak_indirect();        // Causes indirect leak
+
+  still_reachable();      // Will show as still reachable
+
+  return 0;               // d1 not deleted (definitely lost)
+}
+
+// EOF
