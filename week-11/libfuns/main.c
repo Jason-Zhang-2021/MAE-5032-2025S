@@ -1,9 +1,8 @@
 #include <stdio.h>
 #include <unistd.h>
-#include <sys/time.h>
-#include <sys/resource.h>
-#include <sys/times.h>
-#include <time.h>
+#include <sys/time.h>     // gettimeofday 
+#include <sys/resource.h> // getrusage
+#include <sys/times.h>    // times
 
 int main()
 {
