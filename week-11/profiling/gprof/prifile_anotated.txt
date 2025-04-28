@@ -1,0 +1,54 @@
+*** File /work/mae-liuj/MAE-5032-2025S/week-11/profiling/gprof/main.c:
+                #include <stdio.h>
+                
+                void new_func1(void)
+           1 -> {
+                    printf("\n Inside new_func1() \n");
+                    int i = 0;
+                    for (; i < 0xffffffee; i++);
+                }
+                
+                void func1(void)
+           1 -> {
+                    printf("\n Inside func1 \n");
+                    int i = 0;
+                    for (; i < 0xffffffff; i++);
+                    new_func1();
+                }
+                
+                static void func2(void)
+           1 -> {
+                    printf("\n Inside func2 \n");
+                    int i = 0;
+                    for (; i < 0xffffffaa; i++);
+                    return;
+                }
+                
+                int main(void)
+       ##### -> {
+                    printf("\n Inside main() \n");
+                    int i = 0;
+                    for (; i < 0xffffff; i++);
+                    func1();
+                    func2();
+                    return 0;
+                }
+                
+
+
+Top 10 Lines:
+
+     Line      Count
+
+        4          1
+       11          1
+       19          1
+
+Execution Summary:
+
+        4   Executable lines in this file
+        4   Lines executed
+   100.00   Percent of the file executed
+
+        3   Total number of line executions
+     0.75   Average executions per line
