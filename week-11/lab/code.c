@@ -25,8 +25,8 @@ void winky(void)
   char *pw = word;
   strcpy(word, "hello");
 
-  change_char(pw);    // can you substitute word for pw?
-  change_ptr(&pw);    // can you substitute &word for &pw?
+  change_char(pw);
+  change_ptr(&pw);
 }
 
 int main(int argc, char *argv[])
