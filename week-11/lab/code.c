@@ -9,13 +9,13 @@ void binky(int a[], int *b)
 void change_char(char *s)
 {
   *s = 'j';
-  s = "Leland";
+  s = "MAE";
 }
 
 void change_ptr(char **p_str)
 {
   **p_str = 'm';
-  *p_str = "Stanford";
+  *p_str = "SUSTech";
   p_str = NULL;
 }
 
