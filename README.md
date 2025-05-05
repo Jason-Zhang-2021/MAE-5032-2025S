@@ -17,7 +17,7 @@ This course aims to give students an in-depth understanding of the modern approa
 - **Tutorials will be distributed in class**  
 
 ### Prerequisites
-C programming language.
+C and C++ programming language.
 
 ## Course Schedule:
 | Week  | Topic |
