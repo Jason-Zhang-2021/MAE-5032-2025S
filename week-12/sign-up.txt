@@ -1,2 +1,5 @@
 # Please list your name, student ID, github ID, email in the following
-
+DAVID JIAWEI LUO LIANG
+12431140
+davidluojw
+12431140@mail.sustech.edu.cn
