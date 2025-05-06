@@ -1,4 +1,3 @@
 # Please list your name, student ID, github ID, email in the following
-Chi Ding 12431145 Mr-Chi-Ding cding1995@gmail.com
-Chongran Zhao, 12332529, Chongran-Zhao, imchongran@gmail.com
+Liang Hongming, 12332526, 2962557717@qq.com.
 
