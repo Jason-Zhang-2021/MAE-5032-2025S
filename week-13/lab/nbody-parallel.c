@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <time.h>
 #include <mpi.h>
 
 #define N 5000
@@ -80,7 +81,7 @@ int main(int argc, char **argv) {
   double *fx = (double *)malloc(local_n * sizeof(double));
   double *fy = (double *)malloc(local_n * sizeof(double));
 
-  srand(42 + rank);
+  srand((unsigned int)time(NULL) + rank * 101);
   init_particles_local(local_particles, start_idx, local_n);
 
   MPI_Allgatherv(local_particles, local_n * sizeof(Particle), MPI_BYTE,
