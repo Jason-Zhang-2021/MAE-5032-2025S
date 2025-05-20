@@ -17,8 +17,10 @@ typedef struct {
   double mass;
 } Particle;
 
-void init_particles_local(Particle *p, int offset, int count) {
-  for (int i = 0; i < count; ++i) {
+void init_particles_local(Particle *p, int count) 
+{
+  for (int i = 0; i < count; ++i) 
+  {
     p[i].x = rand() / (double)RAND_MAX;
     p[i].y = rand() / (double)RAND_MAX;
     p[i].vx = 0.0;
@@ -27,13 +29,18 @@ void init_particles_local(Particle *p, int offset, int count) {
   }
 }
 
-void compute_forces(int start, int count, Particle *p_all, Particle *p_local, double *fx, double *fy) {
-  for (int i = 0; i < count; ++i) {
+void compute_forces(int start, int count, Particle *p_all, 
+    Particle *p_local, double *fx, double *fy) 
+{
+  for (int i = 0; i < count; ++i) 
+  {
     int idx_i = start + i;
     fx[i] = 0.0;
     fy[i] = 0.0;
-    for (int j = 0; j < N; ++j) {
-      if (idx_i != j) {
+    for (int j = 0; j < N; ++j) 
+    {
+      if (idx_i != j) 
+      {
         double dx = p_all[j].x - p_local[i].x;
         double dy = p_all[j].y - p_local[i].y;
         double dist_sqr = dx * dx + dy * dy + SOFTENING;
@@ -46,8 +53,10 @@ void compute_forces(int start, int count, Particle *p_all, Particle *p_local, do
   }
 }
 
-void update_particles(Particle *p, double *fx, double *fy, int count) {
-  for (int i = 0; i < count; ++i) {
+void update_particles(int count, Particle *p, double *fx, double *fy) 
+{
+  for (int i = 0; i < count; ++i) 
+  {
     p[i].vx += fx[i] / p[i].mass * DT;
     p[i].vy += fy[i] / p[i].mass * DT;
     p[i].x += p[i].vx * DT;
@@ -55,22 +64,26 @@ void update_particles(Particle *p, double *fx, double *fy, int count) {
   }
 }
 
-int main(int argc, char **argv) {
+int main(int argc, char **argv) 
+{
   MPI_Init(&argc, &argv);
 
   int rank, size;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &size);
 
+  // partition the work load
   int base = N / size;
   int extra = N % size;
   int local_n = base + (rank < extra ? 1 : 0);
   int start_idx = rank * base + (rank < extra ? rank : extra);
 
+  // number of data and offsets for data gathering
   int *counts = (int *)malloc(size * sizeof(int));
   int *displs = (int *)malloc(size * sizeof(int));
   int offset = 0;
-  for (int i = 0; i < size; ++i) {
+  for (int i = 0; i < size; ++i) 
+  {
     counts[i] = base + (i < extra ? 1 : 0);
     displs[i] = offset * sizeof(Particle);
     offset += counts[i];
@@ -81,22 +94,23 @@ int main(int argc, char **argv) {
   double *fx = (double *)malloc(local_n * sizeof(double));
   double *fy = (double *)malloc(local_n * sizeof(double));
 
+  // initialize the initial location
   srand((unsigned int)time(NULL) + rank * 101);
-  init_particles_local(local_particles, start_idx, local_n);
+  init_particles_local(local_particles, local_n);
 
   MPI_Allgatherv(local_particles, local_n * sizeof(Particle), MPI_BYTE,
                  all_particles, counts, displs, MPI_BYTE, MPI_COMM_WORLD);
 
-  for (int step = 0; step < STEPS; ++step) {
+  for (int step = 0; step < STEPS; ++step) 
+  {
     compute_forces(start_idx, local_n, all_particles, local_particles, fx, fy);
-    update_particles(local_particles, fx, fy, local_n);
+    update_particles(local_n, local_particles, fx, fy);
 
     MPI_Allgatherv(local_particles, local_n * sizeof(Particle), MPI_BYTE,
                    all_particles, counts, displs, MPI_BYTE, MPI_COMM_WORLD);
   }
 
-  if (rank == 0)
-    printf("Simulation done.\n");
+  if (rank == 0) printf("Simulation done.\n");
 
   free(all_particles);
   free(local_particles);
@@ -109,3 +123,4 @@ int main(int argc, char **argv) {
   return 0;
 }
 
+// EOF
