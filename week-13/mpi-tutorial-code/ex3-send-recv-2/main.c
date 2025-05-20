@@ -20,8 +20,11 @@ int main(int argc, char **argv)
   }
   else
   {
-    MPI_Recv(&message, 1, MPI_INT, 0, tag, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-    printf("Rank %d received the following integer: %d\n", rank, message);
+    MPI_Status status;
+    MPI_Recv(&message, 1, MPI_INT, MPI_ANY_SOURCE, MPI_ANY_TAG, 
+        MPI_COMM_WORLD, &status);
+    printf("Rank %d received the following integer: %d from process %d with tag %d\n",
+        rank, message, status.MPI_SOURCE, status.MPI_TAG);
   }
 
   MPI_Finalize();
