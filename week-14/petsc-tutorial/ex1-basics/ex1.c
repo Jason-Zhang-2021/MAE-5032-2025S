@@ -1,10 +1,8 @@
 static char help[] = "Introductory example that illustrates printing.\n\n";
 
-/*T
-   Concepts: introduction to PETSc;
-   Concepts: printing^in parallel
-   Processors: n
-T*/
+// Concepts: introduction to PETSc;
+// Concepts: printing in parallel
+// Processors: n
 
 #include <petscsys.h>
 int main(int argc,char **argv)
@@ -23,10 +21,6 @@ int main(int argc,char **argv)
   */
   ierr = PetscInitialize(&argc,&argv,(char*)0,help);if (ierr) return ierr;
 
-  /*
-     The following MPI calls return the number of processes
-     being used and the rank of this process in the group.
-   */
   ierr = MPI_Comm_size(PETSC_COMM_WORLD,&size);CHKERRMPI(ierr);
   ierr = MPI_Comm_rank(PETSC_COMM_WORLD,&rank);CHKERRMPI(ierr);
 
@@ -38,9 +32,6 @@ int main(int argc,char **argv)
   */
   ierr = PetscPrintf(PETSC_COMM_WORLD,"Number of processors = %d, rank = %d\n",size,rank);CHKERRQ(ierr);
 
-  /*
-    Here a barrier is used to separate the two program states.
-  */
   ierr = MPI_Barrier(PETSC_COMM_WORLD);CHKERRMPI(ierr);
 
   /*
@@ -49,7 +40,6 @@ int main(int argc,char **argv)
     to the screen.  Thus, the output from different processes does not
     appear in any particular order.
   */
-
   ierr = PetscPrintf(PETSC_COMM_SELF,"Hello World from rank %d \n",rank);CHKERRQ(ierr);
 
   /*
