@@ -1,6 +1,6 @@
 
 # -*- mode: makefile -*-
-PETSC_DIR := /Users/juliu/lib/petsc-3.15.5-debug
+PETSC_DIR := /work/mae-liuj/lib/petsc-3.16.6-opt
 PETSC_ARCH := .
 
 # This sample (GNU) Makefile can be used to compile PETSc applications with a single
@@ -15,7 +15,7 @@ PETSC_ARCH := .
 #
 # The following variable must either be a path to petsc.pc or just "petsc" if petsc.pc
 # has been installed to a system location or can be found in PKG_CONFIG_PATH.
-petsc.pc := $(PETSC_DIR)/$(PETSC_ARCH)/lib/pkgconfig/petsc.pc
+petsc.pc := $(PETSC_DIR)/$(PETSC_ARCH)/lib/pkgconfig/PETSc.pc
 
 # Additional libraries that support pkg-config can be added to the list of PACKAGES below.
 PACKAGES := $(petsc.pc)

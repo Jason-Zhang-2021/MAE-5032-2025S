@@ -1,0 +1,15 @@
+#!/bin/bash
+#BSUB -J mytest
+#BSUB -q debug
+#BSUB -n 1
+#BSUB -W 00:05
+#BSUB -e %J.err
+#BSUB -o %J.out
+#BSUB -R "span[ptile=1]"
+#BSUB -m 'r13n45'
+
+module purge
+module load intel/2018.4
+module load mpi/intel/2018.4
+
+mpirun -np 5 ./ex2.out > $LSB_JOBID.log 2>&1
