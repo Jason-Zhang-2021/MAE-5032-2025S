@@ -36,6 +36,12 @@ int main(int argc,char **argv)
   // appear in any particular order.
   ierr = PetscPrintf(PETSC_COMM_SELF,"Hello World from rank %d \n",rank);CHKERRQ(ierr);
 
+  ierr = MPI_Barrier(PETSC_COMM_WORLD);CHKERRMPI(ierr);
+  
+  PetscInt number = 0;
+  ierr = PetscOptionsGetInt(NULL, NULL, "-number", &number, NULL);CHKERRQ(ierr);
+  ierr = PetscPrintf(PETSC_COMM_WORLD, "User number is %d\n", number);CHKERRQ(ierr);
+
   // Always call PetscFinalize() before exiting a program.  This routine
   //   - finalizes the PETSc libraries as well as MPI
   //   - provides summary and diagnostic information if certain runtime
