@@ -1,6 +1,6 @@
 
 # -*- mode: makefile -*-
-PETSC_DIR := /Users/juliu/lib/petsc-3.15.5-debug
+PETSC_DIR := /Users/juliu/lib/petsc-3.22.2-debug
 PETSC_ARCH := .
 
 # This sample (GNU) Makefile can be used to compile PETSc applications with a single
@@ -52,7 +52,7 @@ print:
 	@echo CUDA_INCLUDE=$(CUDA_INCLUDE)
 
 # Files
-EXEC := ex4.out
+EXEC := ex3.out
 SRC := $(wildcard *.c)
 OBJ := $(patsubst %.c,%.o,$(SRC))
 
