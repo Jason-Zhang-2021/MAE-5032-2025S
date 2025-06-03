@@ -18,7 +18,7 @@ int main(int argc,char **args)
   Mat            A;                // linear system matrix
   KSP            ksp;              // linear solver context
   PC             pc;               // preconditioner context
-  PetscReal      norm, tol=1000.*PETSC_MACHINE_EPSILON;  // norm of solution error
+  PetscReal      norm;  // norm of solution error
   PetscInt       i,n = 10,col[3],its,rstart,rend,nlocal;
   PetscScalar    one = 1.0,value[3];
 
@@ -48,6 +48,9 @@ int main(int argc,char **args)
   // to have the same parallel layout as the vector created above.
   MatCreate(PETSC_COMM_WORLD,&A);
   MatSetSizes(A, nlocal, nlocal, n, n);
+  MatSetType(A, MATMPIAIJ); 
+  //MatMPIAIJSetPreallocation(A, 2, PETSC_NULLPTR, 0, PETSC_NULLPTR);
+  //MatSetOption(A, MAT_NEW_NONZERO_ALLOCATION_ERR, PETSC_FALSE); 
   MatSetFromOptions(A);
   MatSetUp(A);
 
