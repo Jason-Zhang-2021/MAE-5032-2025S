@@ -1,9 +1,10 @@
 #!/bin/bash
-#BSUB -J petsc-test
-#BSUB -q ser
+#BSUB -J mytest
+#BSUB -q debug
 #BSUB -n 2
-#BSUB -e %J-petsc.err
-#BSUB -o %J-petsc.out
+#BSUB -W 00:02
+#BSUB -e %J.err
+#BSUB -o %J.out
 
 module purge
 module load intel/2018.4
@@ -19,5 +20,5 @@ mpirun -np 2 ./ex4.out -n 10000 \
   -ksp_monitor_short \
   -ksp_converged_reason \
   -ksp_view \
-  -log_view > $LSB_JOBID.log 2>&1 &
+  -log_view > $LSB_JOBID.log 2>&1
 
