@@ -17,10 +17,10 @@ int main(int argc,char **argv)
   //              it prints the various options that can be applied at
   //              runtime.  The user can use the "help" variable place
   //              additional help messages in this printout.
-  ierr = PetscInitialize(&argc,&argv,(char*)0,help);if (ierr) return ierr;
+  PetscInitialize(&argc,&argv,(char*)0,help);
 
-  ierr = MPI_Comm_size(PETSC_COMM_WORLD,&size);CHKERRMPI(ierr);
-  ierr = MPI_Comm_rank(PETSC_COMM_WORLD,&rank);CHKERRMPI(ierr);
+  MPI_Comm_size(PETSC_COMM_WORLD,&size);
+  MPI_Comm_rank(PETSC_COMM_WORLD,&rank);
 
   // Here we would like to print only one message that represents
   // all the processes in the group.  We use PetscPrintf() with the
@@ -28,19 +28,19 @@ int main(int argc,char **argv)
   // printed representng PETSC_COMM_WORLD, i.e., all the processors.
   ierr = PetscPrintf(PETSC_COMM_WORLD,"Number of processors = %d, rank = %d\n",size,rank);CHKERRQ(ierr);
 
-  ierr = MPI_Barrier(PETSC_COMM_WORLD);CHKERRMPI(ierr);
+  MPI_Barrier(PETSC_COMM_WORLD);
 
   // Here we simply use PetscPrintf() with the communicator PETSC_COMM_SELF,
   // where each process is considered separately and prints independently
   // to the screen.  Thus, the output from different processes does not
   // appear in any particular order.
-  ierr = PetscPrintf(PETSC_COMM_SELF,"Hello World from rank %d \n",rank);CHKERRQ(ierr);
+  PetscPrintf(PETSC_COMM_SELF,"Hello World from rank %d \n",rank);
 
-  ierr = MPI_Barrier(PETSC_COMM_WORLD);CHKERRMPI(ierr);
+  MPI_Barrier(PETSC_COMM_WORLD);
   
   PetscInt number = 0;
-  ierr = PetscOptionsGetInt(NULL, NULL, "-number", &number, NULL);CHKERRQ(ierr);
-  ierr = PetscPrintf(PETSC_COMM_WORLD, "User number is %d\n", number);CHKERRQ(ierr);
+  PetscOptionsGetInt(NULL, NULL, "-number", &number, NULL);
+  PetscPrintf(PETSC_COMM_WORLD, "User number is %d\n", number);
 
   // Always call PetscFinalize() before exiting a program.  This routine
   //   - finalizes the PETSc libraries as well as MPI
