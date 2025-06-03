@@ -55,7 +55,7 @@ int main(int argc,char **args)
   // The linear system is distributed across the processors by
   // chunks of contiguous rows, which correspond to contiguous
   // sections of the mesh on which the problem is discretized.
-  if (!rstart) 
+  if (rstart == 0) 
   {
     rstart = 1;
     i      = 0; col[0] = 0; col[1] = 1; value[0] = 2.0; value[1] = -1.0;
