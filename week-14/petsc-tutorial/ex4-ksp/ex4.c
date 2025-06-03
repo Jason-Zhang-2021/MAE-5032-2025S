@@ -18,38 +18,36 @@ int main(int argc,char **args)
   Mat            A;                // linear system matrix
   KSP            ksp;              // linear solver context
   PC             pc;               // preconditioner context
-  PetscReal      norm,tol=1000.*PETSC_MACHINE_EPSILON;  // norm of solution error
+  PetscReal      norm, tol=1000.*PETSC_MACHINE_EPSILON;  // norm of solution error
   PetscInt       i,n = 10,col[3],its,rstart,rend,nlocal;
   PetscScalar    one = 1.0,value[3];
 
   PetscInitialize(&argc,&args,(char*)0,help);
   PetscOptionsGetInt(NULL,NULL,"-n",&n,NULL);
 
-  // Compute the matrix and right-hand-side vector that define the linear system, Ax = b.
+  // Compute the matrix and right-hand-side vector that define the linear system, 
+  // Ax = b.
 
   // Create vectors.  Note that we form 1 vector from scratch and
   // then duplicate as needed. For this simple case let PETSc decide how
   // many elements of the vector are stored on each processor. The second
   // argument to VecSetSizes() below causes PETSc to decide.
-  VecCreate(PETSC_COMM_WORLD,&x);
-  VecSetSizes(x,PETSC_DECIDE,n);
+  VecCreate(PETSC_COMM_WORLD, &x);
+  VecSetSizes(x, PETSC_DECIDE, n);
   VecSetFromOptions(x);
-  VecDuplicate(x,&b);
-  VecDuplicate(x,&u);
+  VecDuplicate(x, &b);
+  VecDuplicate(x, &u);
 
   // Identify the starting and ending mesh points on each
-  // processor for the interior part of the mesh. We let PETSc decide above.
-  VecGetOwnershipRange(x,&rstart,&rend);
+  // processor for the interior part of the mesh.
+  VecGetOwnershipRange(x, &rstart, &rend);
   VecGetLocalSize(x,&nlocal);
 
-  // Create matrix.  When using MatCreate(), the matrix format can be specified at runtime.
-  // Performance tuning note:  For problems of substantial size,
-  // preallocation of matrix memory is crucial for attaining good performance.
-  //
+  // Create matrix.
   // We pass in nlocal as the "local" size of the matrix to force it
   // to have the same parallel layout as the vector created above.
   MatCreate(PETSC_COMM_WORLD,&A);
-  MatSetSizes(A,nlocal,nlocal,n,n);
+  MatSetSizes(A, nlocal, nlocal, n, n);
   MatSetFromOptions(A);
   MatSetUp(A);
 
@@ -57,13 +55,11 @@ int main(int argc,char **args)
   // The linear system is distributed across the processors by
   // chunks of contiguous rows, which correspond to contiguous
   // sections of the mesh on which the problem is discretized.
-  // For matrix assembly, each processor contributes entries for
-  // the part that it owns locally.
   if (!rstart) 
   {
     rstart = 1;
     i      = 0; col[0] = 0; col[1] = 1; value[0] = 2.0; value[1] = -1.0;
-    MatSetValues(A,1,&i,2,col,value,INSERT_VALUES);
+    MatSetValues(A, 1, &i, 2, col, value, INSERT_VALUES);
   }
   
   if (rend == n) 
@@ -92,16 +88,14 @@ int main(int argc,char **args)
 
   // VecView(u,PETSC_VIEWER_STDOUT_WORLD);
 
-  MatMult(A,u,b);
+  MatMult(A, u, b);
 
   // Create the linear solver and set various options
-
-  // Create linear solver context
-  KSPCreate(PETSC_COMM_WORLD,&ksp);
+  KSPCreate(PETSC_COMM_WORLD, &ksp);
 
   // Set operators. Here the matrix that defines the linear system
   // also serves as the preconditioning matrix.
-  KSPSetOperators(ksp,A,A);
+  KSPSetOperators(ksp, A, A);
 
   // Set linear solver defaults for this problem (optional).
   // - By extracting the KSP and PC contexts from the KSP context,
@@ -110,9 +104,9 @@ int main(int argc,char **args)
   // - The following four statements are optional; all of these
   //   parameters could alternatively be specified at runtime via
   //   KSPSetFromOptions();
-  KSPGetPC(ksp,&pc);
-  PCSetType(pc,PCJACOBI);
-  KSPSetTolerances(ksp,1.e-7,PETSC_DEFAULT,PETSC_DEFAULT,PETSC_DEFAULT);
+  KSPGetPC(ksp, &pc);
+  PCSetType(pc, PCJACOBI);
+  KSPSetTolerances(ksp, 1.e-7, PETSC_DEFAULT, PETSC_DEFAULT, PETSC_DEFAULT);
 
   // Set runtime options, e.g.,
   //     -ksp_type <type> -pc_type <type> -ksp_monitor -ksp_rtol <rtol>
@@ -124,11 +118,10 @@ int main(int argc,char **args)
   KSPSolve(ksp,b,x);
 
   // Check solution and clean up
-
   // Check the error
-  VecAXPY(x,-1.0,u);
-  VecNorm(x,NORM_2,&norm);
-  KSPGetIterationNumber(ksp,&its);
+  VecAXPY(x, -1.0, u);
+  VecNorm(x, NORM_2, &norm);
+  KSPGetIterationNumber(ksp, &its);
   
   PetscPrintf(PETSC_COMM_WORLD,"Norm of error %g, Iterations %D\n",(double)norm,its);
 
