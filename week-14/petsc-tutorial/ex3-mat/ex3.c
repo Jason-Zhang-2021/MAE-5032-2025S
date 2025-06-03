@@ -1,4 +1,4 @@
-static char help[] = "Illustrate the use of MatResetPreallocation.\n";
+static char help[] = "Illustrate the use of Mat Preallocation.\n";
 
 #include "petscmat.h"
 
