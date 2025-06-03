@@ -9,8 +9,6 @@ static char help[] = "Solves a tridiagonal linear system.\n\n";
 //    petscksp.h       - Krylov subspace methods
 //    petscviewer.h    - viewers
 //    petscpc.h        - preconditioners
-//
-// Note:  The corresponding uniprocessor example is ex1.c
 
 #include <petscksp.h>
 
@@ -21,12 +19,11 @@ int main(int argc,char **args)
   KSP            ksp;              // linear solver context
   PC             pc;               // preconditioner context
   PetscReal      norm,tol=1000.*PETSC_MACHINE_EPSILON;  // norm of solution error
-  PetscErrorCode ierr;
   PetscInt       i,n = 10,col[3],its,rstart,rend,nlocal;
   PetscScalar    one = 1.0,value[3];
 
-  ierr = PetscInitialize(&argc,&args,(char*)0,help);if (ierr) return ierr;
-  ierr = PetscOptionsGetInt(NULL,NULL,"-n",&n,NULL);CHKERRQ(ierr);
+  PetscInitialize(&argc,&args,(char*)0,help);
+  PetscOptionsGetInt(NULL,NULL,"-n",&n,NULL);
 
   // Compute the matrix and right-hand-side vector that define the linear system, Ax = b.
 
@@ -34,32 +31,29 @@ int main(int argc,char **args)
   // then duplicate as needed. For this simple case let PETSc decide how
   // many elements of the vector are stored on each processor. The second
   // argument to VecSetSizes() below causes PETSc to decide.
-  ierr = VecCreate(PETSC_COMM_WORLD,&x);CHKERRQ(ierr);
-  ierr = VecSetSizes(x,PETSC_DECIDE,n);CHKERRQ(ierr);
-  ierr = VecSetFromOptions(x);CHKERRQ(ierr);
-  ierr = VecDuplicate(x,&b);CHKERRQ(ierr);
-  ierr = VecDuplicate(x,&u);CHKERRQ(ierr);
+  VecCreate(PETSC_COMM_WORLD,&x);
+  VecSetSizes(x,PETSC_DECIDE,n);
+  VecSetFromOptions(x);
+  VecDuplicate(x,&b);
+  VecDuplicate(x,&u);
 
   // Identify the starting and ending mesh points on each
   // processor for the interior part of the mesh. We let PETSc decide above.
-  ierr = VecGetOwnershipRange(x,&rstart,&rend);CHKERRQ(ierr);
-  ierr = VecGetLocalSize(x,&nlocal);CHKERRQ(ierr);
+  VecGetOwnershipRange(x,&rstart,&rend);
+  VecGetLocalSize(x,&nlocal);
 
   // Create matrix.  When using MatCreate(), the matrix format can be specified at runtime.
-  //
   // Performance tuning note:  For problems of substantial size,
   // preallocation of matrix memory is crucial for attaining good performance.
-  // See the matrix chapter of the users manual for details.
   //
   // We pass in nlocal as the "local" size of the matrix to force it
   // to have the same parallel layout as the vector created above.
-  ierr = MatCreate(PETSC_COMM_WORLD,&A);CHKERRQ(ierr);
-  ierr = MatSetSizes(A,nlocal,nlocal,n,n);CHKERRQ(ierr);
-  ierr = MatSetFromOptions(A);CHKERRQ(ierr);
-  ierr = MatSetUp(A);CHKERRQ(ierr);
+  MatCreate(PETSC_COMM_WORLD,&A);
+  MatSetSizes(A,nlocal,nlocal,n,n);
+  MatSetFromOptions(A);
+  MatSetUp(A);
 
   // Assemble matrix.
-  //
   // The linear system is distributed across the processors by
   // chunks of contiguous rows, which correspond to contiguous
   // sections of the mesh on which the problem is discretized.
@@ -69,14 +63,14 @@ int main(int argc,char **args)
   {
     rstart = 1;
     i      = 0; col[0] = 0; col[1] = 1; value[0] = 2.0; value[1] = -1.0;
-    ierr   = MatSetValues(A,1,&i,2,col,value,INSERT_VALUES);CHKERRQ(ierr);
+    MatSetValues(A,1,&i,2,col,value,INSERT_VALUES);
   }
   
   if (rend == n) 
   {
     rend = n-1;
     i    = n-1; col[0] = n-2; col[1] = n-1; value[0] = -1.0; value[1] = 2.0;
-    ierr = MatSetValues(A,1,&i,2,col,value,INSERT_VALUES);CHKERRQ(ierr);
+    MatSetValues(A,1,&i,2,col,value,INSERT_VALUES);
   }
 
   // Set entries corresponding to the mesh interior
@@ -84,30 +78,30 @@ int main(int argc,char **args)
   for (i=rstart; i<rend; i++) 
   {
     col[0] = i-1; col[1] = i; col[2] = i+1;
-    ierr   = MatSetValues(A,1,&i,3,col,value,INSERT_VALUES);CHKERRQ(ierr);
+    MatSetValues(A,1,&i,3,col,value,INSERT_VALUES);
   }
 
   // Assemble the matrix
-  ierr = MatAssemblyBegin(A,MAT_FINAL_ASSEMBLY);CHKERRQ(ierr);
-  ierr = MatAssemblyEnd(A,MAT_FINAL_ASSEMBLY);CHKERRQ(ierr);
+  MatAssemblyBegin(A,MAT_FINAL_ASSEMBLY);
+  MatAssemblyEnd(A,MAT_FINAL_ASSEMBLY);
 
-  // ierr = MatView(A,PETSC_VIEWER_STDOUT_WORLD);CHKERRQ(ierr);
+  // MatView(A,PETSC_VIEWER_STDOUT_WORLD);
 
   // Set exact solution; then compute right-hand-side vector.
-  ierr = VecSet(u,one);CHKERRQ(ierr);
+  VecSet(u,one);
 
-  // ierr = VecView(u,PETSC_VIEWER_STDOUT_WORLD);CHKERRQ(ierr);
+  // VecView(u,PETSC_VIEWER_STDOUT_WORLD);
 
-  ierr = MatMult(A,u,b);CHKERRQ(ierr);
+  MatMult(A,u,b);
 
   // Create the linear solver and set various options
 
   // Create linear solver context
-  ierr = KSPCreate(PETSC_COMM_WORLD,&ksp);CHKERRQ(ierr);
+  KSPCreate(PETSC_COMM_WORLD,&ksp);
 
   // Set operators. Here the matrix that defines the linear system
   // also serves as the preconditioning matrix.
-  ierr = KSPSetOperators(ksp,A,A);CHKERRQ(ierr);
+  KSPSetOperators(ksp,A,A);
 
   // Set linear solver defaults for this problem (optional).
   // - By extracting the KSP and PC contexts from the KSP context,
@@ -116,41 +110,40 @@ int main(int argc,char **args)
   // - The following four statements are optional; all of these
   //   parameters could alternatively be specified at runtime via
   //   KSPSetFromOptions();
-  ierr = KSPGetPC(ksp,&pc);CHKERRQ(ierr);
-  ierr = PCSetType(pc,PCJACOBI);CHKERRQ(ierr);
-  ierr = KSPSetTolerances(ksp,1.e-7,PETSC_DEFAULT,PETSC_DEFAULT,PETSC_DEFAULT);CHKERRQ(ierr);
+  KSPGetPC(ksp,&pc);
+  PCSetType(pc,PCJACOBI);
+  KSPSetTolerances(ksp,1.e-7,PETSC_DEFAULT,PETSC_DEFAULT,PETSC_DEFAULT);
 
   // Set runtime options, e.g.,
   //     -ksp_type <type> -pc_type <type> -ksp_monitor -ksp_rtol <rtol>
   // These options will override those specified above as long as
   // KSPSetFromOptions() is called _after_ any other customization routines.
-  ierr = KSPSetFromOptions(ksp);CHKERRQ(ierr);
+  KSPSetFromOptions(ksp);
 
   // Solve the linear system
-  ierr = KSPSolve(ksp,b,x);CHKERRQ(ierr);
+  KSPSolve(ksp,b,x);
 
   // Check solution and clean up
 
   // Check the error
-  ierr = VecAXPY(x,-1.0,u);CHKERRQ(ierr);
-  ierr = VecNorm(x,NORM_2,&norm);CHKERRQ(ierr);
-  ierr = KSPGetIterationNumber(ksp,&its);CHKERRQ(ierr);
-  if (norm > tol) {
-    ierr = PetscPrintf(PETSC_COMM_WORLD,"Norm of error %g, Iterations %D\n",(double)norm,its);CHKERRQ(ierr);
-  }
+  VecAXPY(x,-1.0,u);
+  VecNorm(x,NORM_2,&norm);
+  KSPGetIterationNumber(ksp,&its);
+  
+  PetscPrintf(PETSC_COMM_WORLD,"Norm of error %g, Iterations %D\n",(double)norm,its);
 
   // Free work space.  All PETSc objects should be destroyed when they
   // are no longer needed.
-  ierr = VecDestroy(&x);CHKERRQ(ierr); ierr = VecDestroy(&u);CHKERRQ(ierr);
-  ierr = VecDestroy(&b);CHKERRQ(ierr); ierr = MatDestroy(&A);CHKERRQ(ierr);
-  ierr = KSPDestroy(&ksp);CHKERRQ(ierr);
+  VecDestroy(&x); VecDestroy(&u);
+  VecDestroy(&b); MatDestroy(&A);
+  KSPDestroy(&ksp);
 
   // Always call PetscFinalize() before exiting a program.  This routine
   //   - finalizes the PETSc libraries as well as MPI
   //   - provides summary and diagnostic information if certain runtime
   //     options are chosen (e.g., -log_view).
-  ierr = PetscFinalize();
-  return ierr;
+  PetscFinalize();
+  return 0;
 }
 
 // EOF
