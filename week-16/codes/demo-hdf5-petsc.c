@@ -45,11 +45,21 @@ int main(int argc, char **argv)
   printf("updated dset_data[3][1][2]: %2d\n", dset_data[3][1][2]);
 
   // Create a group and dataset for PETSc parameters
-  hid_t group_id = H5Gcreate(file_id, "/PETScParams", H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+  hid_t group_id;
+  if (H5Lexists(file_id, "/PETScParams", H5P_DEFAULT) > 0)
+    group_id = H5Gopen(file_id, "/PETScParams", H5P_DEFAULT);
+  else
+    group_id = H5Gcreate(file_id, "/PETScParams", H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
 
+  hid_t dset_id;
   hsize_t dims = 2;
   hid_t dataspace_id = H5Screate_simple(1, &dims, NULL);
-  hid_t dset_id = H5Dcreate(group_id, "int_params", H5T_NATIVE_INT, dataspace_id, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+
+  if (H5Lexists(group_id, "int_params", H5P_DEFAULT) > 0)
+    dset_id = H5Dopen(group_id, "int_params", H5P_DEFAULT);
+  else
+    dset_id = H5Dcreate(group_id, "int_params", H5T_NATIVE_INT, dataspace_id,
+        H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
 
   int petsc_params[2] = {myparam1, myparam2};
   status = H5Dwrite(dset_id, H5T_NATIVE_INT, H5S_ALL, H5S_ALL, H5P_DEFAULT, petsc_params);
